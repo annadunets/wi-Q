@@ -1,0 +1,37 @@
+version: "2"
+services:
+
+  nginx:
+    build:
+      context: ./scripts/nginx
+      dockerfile: Dockerfile_api
+    container_name: nginx-container
+    ports:
+      - 80:80
+    links:
+      - php
+    volumes:
+      - ./api/:/var/www/html/api
+
+  nginx_server:
+    build:
+      context: ./scripts/nginx
+      dockerfile: Dockerfile_test_server
+    container_name: nginx-server-container
+    ports:
+      - 5555:80
+    links:
+      - php
+    volumes:
+      - ./test_server/:/var/www/html/test_server
+
+  php:
+    build: ./scripts/php/
+    container_name: php-container
+    expose:
+      - 9000
+    volumes:
+      - ./api/:/var/www/html/api
+      - ./test_server/:/var/www/html/test_server
+
+
